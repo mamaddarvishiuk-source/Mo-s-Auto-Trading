@@ -1,0 +1,16 @@
+{
+  "name": "mo-auto-trading",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "express": "^4.21.2",
+    "express-session": "^1.18.2",
+    "mongodb": "^6.21.0",
+    "multer": "^1.4.5-lts.1"
+  }
+}

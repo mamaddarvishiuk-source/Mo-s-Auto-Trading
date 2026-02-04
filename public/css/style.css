@@ -1,0 +1,966 @@
+/* 
+   RESET & BASE
+= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: none; 
+  color: #fff;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+
+/* 
+   COLOR VARIABLES
+= */
+:root {
+  --black: #000000;
+  --gold: #D4AF37;
+  --gold-dark: #b38b23;
+  --gray: #bcbcbc;
+  --gray-light: #2b2b2b;
+  --white: #ffffff;
+}
+
+/* 
+   COMMON UTILITIES
+= */
+.hidden {
+  display: none !important;
+}
+
+button,
+input,
+select,
+textarea {
+  transition: 0.25s ease;
+}
+
+/* 
+   LAYOUT
+= */
+.layout {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.center-column {
+  width: 100%;
+  max-width: 900px;
+  min-height: 500px;
+}
+
+.view-section {
+  display: none;
+}
+
+.view-section.active {
+  display: block;
+}
+
+/* 
+   HEADER
+= */
+.header {
+  background: var(--black);
+  border-bottom: 1px solid var(--gold);
+  padding: 15px 25px;
+}
+
+.header-inner {
+  max-width: 1150px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-main {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.logo-sub {
+  font-size: 14px;
+  color: var(--gold-dark);
+  margin-left: 4px;
+}
+.logo-img {
+  height: 36px;         
+  width: auto;
+  margin-right: 10px;  
+  vertical-align: middle;
+}
+
+.main-nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  background: transparent;
+  border: 1px solid var(--gold);
+  padding: 7px 16px;
+  color: var(--gold);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+  background: var(--gold);
+  color: var(--black);
+}
+
+.nav-btn-logout {
+  border-color: var(--gold-dark);
+  color: var(--gold-dark);
+}
+
+.nav-btn-logout:hover {
+  background: var(--gold-dark);
+  color: var(--black);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-username {
+  color: var(--gold-dark);
+  font-weight: 500;
+}
+
+/* Small circular avatar in header */
+.header-profile-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  object-fit: cover;
+}
+
+/* 
+   FLASH MESSAGES
+= */
+.flash-container {
+  margin-bottom: 20px;
+}
+
+.flash-message {
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.flash-success {
+  background: #067a3a;
+}
+
+.flash-error {
+  background: #b00020;
+}
+
+/* 
+   SECTION HEADERS
+= */
+.section-header {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--gold-dark);
+}
+
+.section-header h2 {
+  color: var(--gold);
+  font-size: 24px;
+}
+
+/* 
+   AUTH SECTION
+= */
+.auth-card {
+  background: var(--gray);
+  padding: 30px;
+  border-radius: 10px;
+  border: 1px solid var(--gold);
+}
+
+.auth-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.auth-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 7px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.auth-toggle-btn.active,
+.auth-toggle-btn:hover {
+  background: var(--gold);
+  color: var(--black);
+}
+
+.auth-title {
+  color: var(--gold-dark);
+  font-size: 22px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+/* Logo inside the login/register card */
+.auth-logo {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.auth-logo-img {
+  height: 60px;  
+  width: auto;
+}
+
+/* 
+   FORM ELEMENTS
+= */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  color: var(--gold-dark);
+  font-size: 13px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding:10px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px;
+  background: var(--gray-light);
+  border: 1px solid var(--gold-dark);
+  color: var(--white);
+  border-radius: 6px;
+}
+
+/* 
+   BUTTONS STYLES
+= */
+.primary-btn {
+  background: var(--gold);
+  color: var(--black);
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: var(--gold-dark);
+}
+
+
+.secondary-btn {
+  background: transparent;
+  border: 1px solid var(--gold-dark);
+  color: var(--gold-dark);
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.secondary-btn:hover {
+  background: var(--gold-dark);
+  color: var(--black);
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* 
+   FEED — QUICK POST COMPOSER
+= */
+.feed-composer {
+  background: var(--gray);
+  border-radius: 8px;
+  border: 1px solid var(--gold-dark);
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.feed-composer-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.feed-avatar-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: var(--gray-light);
+}
+
+.feed-composer-top input {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--gray-light);
+  border-radius: 20px;
+  border: 1px solid var(--gold-dark);
+  color: var(--white);
+}
+
+.feed-composer-bottom {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.feed-composer-bottom input {
+  flex: 1;
+  padding: 8px 10px;
+  background: var(--gray-light);
+  border-radius: 6px;
+  border: 1px solid var(--gold-dark);
+  color: var(--white);
+}
+
+/* 
+   FEED LISTINGS GRID
+ */
+.grid-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 10px;
+}
+
+
+.grid-card:hover {
+  border-color: var(--gold);
+}
+
+.grid-card-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;  /* makes the listings  image square */
+  object-fit: cover;
+  background: #111;
+}
+
+.grid-card-content {
+  background: var(--black);
+  border-top: 1px solid var(--gold-dark);
+  padding: 12px;
+}
+
+.grid-card-price {
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.grid-card-title {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 3px;
+  color: var(--white);
+}
+
+.grid-card-meta {
+  font-size: 12px;
+  color: #cfcfcf;
+}
+
+/* 
+   DVLA  + AUTO FILL SUMMARY
+= */
+.dvla-result-card,
+.cardata-summary {
+  background: var(--gray);
+  border: 1px solid var(--gold-dark);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+/* 
+   IMAGE UPLOADS AND PREVIEW 
+= */
+.image-upload-row {
+  display: flex;
+  gap: 10px;
+}
+
+.image-preview-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.image-preview-row img {
+  width: 90px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--gold-dark);
+}
+
+/* 
+   PROFILE LAYOUT AND CARD
+= */
+.profile-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.profile-side {
+  width: 230px;
+}
+
+.profile-main {
+  flex: 1;
+}
+
+.profile-card {
+  background: var(--gold-dark);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--gold);
+  text-align: center;
+}
+
+.profile-avatar img {
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  border: 2px solid var(--gold);
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.profile-meta {
+  margin-top: 15px;
+  font-size: 14px;
+  color: var(--gold);
+}
+
+/* 
+   MESSAGES AND CHAT UI
+= */
+.messages-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.messages-sidebar {
+  width: 220px;
+  background: var(--gray);
+  border-radius: 8px;
+  border: 1px solid var(--gold);
+  padding: 15px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.conversation-list {
+  list-style: none;
+  margin-top: 10px;
+}
+
+.conversation-list li {
+  padding: 8px;
+  border-bottom: 1px solid var(--gold-dark);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.conversation-list li:hover {
+  background: var(--gray-light);
+}
+
+.messages-main {
+  flex: 1;
+  min-width: 260px;
+  background: var(--gray);
+  border-radius: 8px;
+  border: 1px solid var(--gold-dark);
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+}
+
+.messages-header {
+  margin-bottom: 10px;
+}
+
+.messages-thread {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-bottom: 10px;
+}
+
+.message-form {
+  display: flex;
+  gap: 10px;
+}
+
+.message-form textarea {
+  flex: 1;
+  background: var(--gray-light);
+  border: 1px solid var(--gold-dark);
+  color: var(--white);
+  padding: 8px;
+  border-radius: 6px;
+}
+
+/* Simple message bubble styling */
+.message-bubble {
+  margin-bottom: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  display: inline-block;
+  max-width: 80%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* 
+    SINGLE LISTING VIEW
+= */
+.back-btn {
+  margin-bottom: 15px;
+}
+
+.listing-container {
+  background: var(--black);
+  border: 1px solid var(--gold-dark);
+  border-radius: 8px;
+  padding: 20px;
+  color: var(--white);
+}
+
+.listing-detail-images {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.listing-detail-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--gold-dark);
+  object-fit: cover;
+}
+
+.listing-detail-title {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.listing-detail-price {
+  font-size: 20px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.listing-detail-meta {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 12px;
+}
+
+.listing-detail-description {
+  margin-bottom: 15px;
+}
+.my-listings-title {
+  color: var(--gold) !important;
+}
+/* Seller info with avatar  under the listing */
+.listing-detail-seller {
+  margin-top: 15px;
+}
+
+.listing-seller-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.seller-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--gold-dark);
+  object-fit: cover;
+}
+
+/* Owner controls under listing ( deleting a listing ) */
+.listing-owner-controls {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+/* 
+    CUSTOM SCROLLBAR
+= */
+::-webkit-scrollbar { width: 7px; }
+::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track { background: var(--black); }
+
+/* 
+   RESPONSIVE ADJUSTMENTS
+= */
+@media (max-width: 768px) {
+  .header-inner { flex-direction: column; gap: 10px; }
+  .main-nav { justify-content: center; }
+  .profile-side { width: 100%; }
+  .grid-card-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;   /* keep card image square on mobiles too */
+  object-fit: cover;     /* crops image nicley inside the square */
+}
+}
+
+/* Full-screen decorative gold-tinted background container  */
+.gold-background {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at center,
+    rgba(255, 220, 150, 0.15),
+    #000 60%);
+}
+
+/* 
+   LIKES & COMMENTS STYLING
+ */
+.like-btn {
+  background: #0a2e4e;
+  border: 1px solid var(--gold-dark);
+  color: var(--gold);
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+  margin-bottom: 10px;
+}
+
+.like-btn:hover {
+  background: #103c63;
+  transform: scale(1.03);
+}
+
+.comments-section {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--gold-dark);
+}
+
+.comments-title {
+  color: var(--gold);
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.comments-list {
+  margin-bottom: 15px;
+}
+
+.comment-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--gold-dark);
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.comment-user {
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.comment-text {
+  color: var(--white);
+  opacity: 0.85;
+}
+
+.no-comments {
+  color: #ccc;
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+.comment-input {
+  width: 100%;
+  background: #111;
+  border: 1px solid var(--gold-dark);
+  border-radius: 6px;
+  padding: 10px;
+  color: var(--white);
+  resize: vertical;
+  min-height: 70px;
+  margin-bottom: 10px;
+}
+
+.comment-submit-btn {
+  background: var(--gold-dark);
+  border: 1px solid var(--gold);
+  color: var(--black);
+  font-weight: bold;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.comment-submit-btn:hover {
+  background: var(--gold);
+  transform: scale(1.03);
+}
+
+/* Profile listings in profile page */
+
+.profile-listing-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--gold-dark);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.profile-listing-card:hover {
+  transform: scale(1.02);
+}
+
+.profile-listing-img {
+  width: 100px;
+  height: 70px;
+  object-fit: cover;
+  border-right: 1px solid var(--gold-dark);
+}
+
+.profile-listing-info {
+  padding: 10px;
+  color: var(--white);
+}
+
+.profile-listing-title {
+  font-weight: bold;
+}
+
+.profile-listing-price {
+  color: var(--gold);
+}
+
+/* 
+   USER SEARCH CARDS
+= */
+.car-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid var(--gold-dark);
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.car-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.car-card-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--gold-dark);
+  object-fit: cover;
+}
+
+.car-card-title {
+  color: var(--white);
+}
+
+.car-card-body {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+/* 
+   UNIVERSAL AVATAR HELPERS
+  */
+
+.avatar,
+.header-avatar,
+.user-avatar-small,
+.listing-detail-seller-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover !important;
+  object-position: center;
+  background: var(--gray-light);
+  border: 2px solid var(--gold-dark);
+}
+
+/* smaller avatar used in header */
+.header-avatar {
+  width: 32px;
+  height: 32px;
+}
+
+/* avatar size used in folllowers / following lists */
+.user-avatar-small {
+  width: 36px;
+  height: 36px;
+}
+
+/* Large profile picture */
+.profile-avatar img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover !important;
+}
+
+/* FOLLOWING / FOLLOWERS MODAL */
+.follow-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.follow-modal-content {
+  background: #111;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  padding: 20px;
+  width: 300px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.follow-user-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid #333;
+}
+
+#follow-modal-title {
+  color: var(--gold);
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+/* CLICKABLE FOLLOWER/FOLLOWING PILL ROWS ON PROFILE */
+.follow-btn-row {
+  background: rgba(212, 175, 55, 0.15); 
+  border: 1px solid var(--gold);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 6px;
+  display: inline-block;
+  transition: 0.2s;
+}
+
+.follow-btn-row:hover {
+  background: var(--gold);
+  color: var(--black);
+  transform: scale(1.03);
+}
+
+/*  PAGE BACKGROUND AND OVERLAY  */
+body {
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+/*  BLURRED BACKGROUND IMAGE BEHIND EVERYTHING */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("/img/diamond.png") center center / cover no-repeat;
+  filter: blur(12px) brightness(0.5);
+  z-index: -1;
+  pointer-events: none;
+
+}
+/* PROGILE PICTURE UPLOAD BUTTON */
+#profile-image-upload-btn {
+  background: #222 !important;     
+  color: #fff !important;          
+  border: 1px solid #444 !important;
+}
+
+#profile-image-upload-btn:hover {
+  background: #333 !important;     
+}

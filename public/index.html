@@ -1,0 +1,456 @@
+<!-- 
+* Student Name : MOHAMMAD DARVISHI
+* Student ID : M01031166
+* WEB APPLICATIONS AND DATABASES
+* Coursework2 : MO'S AUTO TRADING
+* MODULE LEADERS: DAVID GAMEZ, ADAM PHILPOT
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MO'S Auto Trading</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER (only visible when user is logged in) -->
+
+  <header id="main-header" class="header hidden">
+    <div class="header-inner">
+      <div class="logo-area">
+        <img src="/img/logo.png" class="logo-img" alt="Logo">
+        <span class="logo-main">MO'S</span>
+        <span class="logo-sub">Auto Trading</span>
+      </div>
+      <nav class="main-nav">
+        <button class="nav-btn" data-section="feed-section">Feed</button>
+        <button class="nav-btn" data-section="search-section">Search</button>
+        <button class="nav-btn" data-section="dvla-check-section">Check Vehicle</button>
+        <button class="nav-btn" data-section="create-section">Create Listing</button>
+        <button class="nav-btn" data-section="saved-section">Saved Cars</button>
+        <button class="nav-btn" data-section="messages-section">Messages</button>
+        <button class="nav-btn" data-section="profile-section">Profile</button>
+      </nav>
+      <div class="header-right">
+        <span id="header-username" class="header-username"></span>
+
+        <!-- Small circular profile picture in header -->
+        <img id="header-profile-image"
+             class="header-profile-avatar"
+             src="/img/default-profile.png"
+             alt="Profile picture">
+        <button id="logout-btn" class="nav-btn nav-btn-logout">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <main class="center-column">
+
+      <!-- FLASH MESSAGES ( temporary flashing only for success or error notifs ) -->
+      <div id="flash-container" class="flash-container"></div>
+
+      <!--  AUTH SECTION LOGIN and REGISTER -->
+
+      <section id="auth-section" class="view-section active">
+        <div class="auth-card">
+          <div class="auth-logo">
+            <img src="/img/logo.png" alt="Mo's Auto Trading logo" class="auth-logo-img">
+          </div>
+
+          <div class="auth-toggle">
+            <button id="show-login" class="auth-toggle-btn active">Login</button>
+            <button id="show-register" class="auth-toggle-btn">Register</button>
+          </div>
+
+          <!-- Login form -->
+          <form id="login-form" class="auth-form">
+            <h2 class="auth-title">Welcome to MO'S Auto Trading</h2>
+            <div class="form-group">
+              <label for="login-username">Username</label>
+              <input type="text" id="login-username" name="username" required>
+            </div>
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input type="password" id="login-password" name="password" required>
+            </div>
+            <button type="submit" class="primary-btn full-width">Login</button>
+          </form>
+
+          <!-- Register form -->
+          <form id="register-form" class="auth-form hidden">
+            <h2 class="auth-title">Create your account</h2>
+
+            <div class="form-group">
+              <label for="register-username">Username</label>
+              <input type="text" id="register-username" required>
+            </div>
+
+            <div class="form-group">
+              <label for="register-email">Email</label>
+              <input type="email" id="register-email" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="register-password">Password</label>
+                <input type="password" id="register-password" required>
+              </div>
+              <div class="form-group">
+                <label for="register-password-confirm">Confirm password</label>
+                <input type="password" id="register-password-confirm" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="register-dob">Date of birth</label>
+              <input type="date" id="register-dob" required>
+            </div>
+
+            <div class="form-group">
+              <label for="register-location">Location</label>
+              <input type="text" id="register-location" placeholder="e.g. London" required>
+            </div>
+
+            <div class="form-group">
+              <label for="register-role">Role</label>
+              <select id="register-role" required>
+                <option value="">Select role</option>
+                <option value="buyer">Buyer</option>
+                <option value="seller">Seller</option>
+                <option value="dealer">Dealer</option>
+              </select>
+            </div>
+
+            <button type="submit" class="primary-btn full-width">Register</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- FEED SECTION -->
+
+      <section id="feed-section" class="view-section">
+        <div class="section-header">
+          <h2>Your Feed</h2>
+          <button id="feed-show-all" class="secondary-btn">All Posts</button>
+          <button id="feed-show-following" class="secondary-btn">Following Only</button>
+          <div class="section-controls">
+            
+            <div class="form-group inline">
+              <label for="feed-sort">Sort by</label>
+              <select id="feed-sort">
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="pricelow">Price: Low → High</option>
+                <option value="pricehigh">Price: High → Low</option>
+              </select>
+            </div>
+            <button id="refresh-feed-btn" class="secondary-btn">Refresh</button>
+          </div>
+        </div>
+
+        <!-- Quick composer for buyers who wants to post wanted post -->
+        <div class="feed-composer">
+          <div class="feed-composer-top">
+            <div class="feed-avatar-circle"></div>
+            <input id="feed-quick-title" type="text" placeholder="What are you posting today? (title)">
+          </div>
+          <div class="feed-composer-bottom">
+            <input id="feed-quick-price" type="number" placeholder="Price (£)">
+            <input id="feed-quick-location" type="text" placeholder="Location">
+            <button id="feed-quick-post-btn" class="primary-btn">Quick post</button>
+          </div>
+        </div>
+
+        <!-- feed greed where all listings cards appear -->
+
+        <div id="feed-grid" class="card-grid"></div>
+      </section>
+
+      <!--  SEARCH SECTION  -->
+      <section id="search-section" class="view-section">
+        <div class="section-header"><h2>Search</h2></div>
+
+        <form id="search-cars-form" class="filter-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="search-make">Make</label>
+              <input type="text" id="search-make" placeholder="e.g. BMW">
+            </div>
+           
+          </div>
+          <button type="submit" class="primary-btn">Search</button>
+        </form>
+
+        <div id="search-results" class="card-list"></div>
+
+        <hr style="margin: 20px 0; border-color: #444;">
+
+        <div class="section-header"><h2>Find Users</h2></div>
+
+        <div class="user-search">
+          <div class="form-group">
+            <label for="search-user-input">Search users</label>
+            <input type="text" id="search-user-input" placeholder="Search by username">
+          </div>
+          <div id="user-search-results" class="card-list"></div>
+        </div>
+      </section>
+
+      <!--  DVLA CHECK  -->
+      <section id="dvla-check-section" class="view-section">
+        <div class="section-header"><h2>Check Vehicle (DVLA)</h2></div>
+
+        <form id="dvla-check-form" class="filter-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dvla-check-reg">Registration number</label>
+              <input type="text" id="dvla-check-reg" placeholder="AB24 CDE" required>
+            </div>
+          </div>
+          <button type="submit" class="primary-btn">Check</button>
+        </form>
+
+        <div id="dvla-check-result" class="dvla-result-card hidden"></div>
+      </section>
+
+      <!--  CREATE LISTING  -->
+       
+      <section id="create-section" class="view-section">
+        <div class="section-header"><h2>Create Listing</h2></div>
+          <!-- full form -->
+        <form id="create-listing-form" class="create-form">
+            <!-- registration and auto fill -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="create-registration">Registration number</label>
+              <input type="text" id="create-registration" required>
+            </div>
+            <div class="form-group reg-fetch-group">
+              <button type="button" id="fetch-cardata-btn" class="secondary-btn">
+                Auto-fill from DVLA
+              </button>
+            </div>
+          </div>
+
+          <div id="cardata-summary" class="cardata-summary hidden"></div>
+
+          <div class="form-group">
+            <label for="create-title">Title</label>
+            <input type="text" id="create-title" required>
+          </div>
+
+          <div class="form-group">
+            <label for="create-description">Description</label>
+            <textarea id="create-description" rows="4" required></textarea>
+          </div>
+            <!-- basic car details -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="create-make">Make</label>
+              <input type="text" id="create-make" required>
+            </div>
+            <div class="form-group">
+              <label for="create-model">Model</label>
+              <input type="text" id="create-model" required>
+            </div>
+            <div class="form-group">
+              <label for="create-year">Year</label>
+              <input type="number" id="create-year" required>
+            </div>
+            <div class="form-group">
+              <label for="create-fuel">Fuel type</label>
+              <input type="text" id="create-fuel" required>
+            </div>
+          </div>
+            <!-- extra vehichle details -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="create-engine">Engine capacity (cc)</label>
+              <input type="number" id="create-engine">
+            </div>
+            <div class="form-group">
+              <label for="create-colour">Colour</label>
+              <input type="text" id="create-colour">
+            </div>
+            <div class="form-group">
+              <label for="create-co2">CO₂ emissions</label>
+              <input type="number" id="create-co2">
+            </div>
+            <div class="form-group">
+              <label for="create-wheelplan">Wheelplan</label>
+              <input type="text" id="create-wheelplan">
+            </div>
+          </div>
+            <!-- Mot and tax -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="create-mot-status">MOT status</label>
+              <input type="text" id="create-mot-status">
+            </div>
+            <div class="form-group">
+              <label for="create-mot-expiry">MOT expiry date</label>
+              <input type="text" id="create-mot-expiry">
+            </div>
+            <div class="form-group">
+              <label for="create-tax-status">Tax status</label>
+              <input type="text" id="create-tax-status">
+            </div>
+            <div class="form-group">
+              <label for="create-tax-due">Tax due date</label>
+              <input type="text" id="create-tax-due">
+            </div>
+          </div>
+             <!-- Registration history -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="create-first-reg">Month of first registration</label>
+              <input type="text" id="create-first-reg">
+            </div>
+            <div class="form-group">
+              <label for="create-v5c-date">Date of last V5C issued</label>
+              <input type="text" id="create-v5c-date">
+            </div>
+            <div class="form-group">
+              <label for="create-mileage">Mileage</label>
+              <input type="number" id="create-mileage" required>
+            </div>
+            <div class="form-group">
+              <label for="create-price">Price (£)</label>
+              <input type="number" id="create-price" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="create-location">Location</label>
+            <input type="text" id="create-location" required>
+          </div>
+
+          <!-- Image uploads for listing 1 to 3 images  -->
+          <div class="form-group">
+            <label>Car images (1–3)</label>
+            <div class="image-upload-row">
+              <input type="file" id="car-image-1" accept="image/*">
+              <input type="file" id="car-image-2" accept="image/*">
+              <input type="file" id="car-image-3" accept="image/*">
+            </div>
+            <div id="car-image-preview" class="image-preview-row"></div>
+          </div>
+
+          <button type="submit" class="primary-btn full-width">Publish listing</button>
+        </form>
+      </section>
+
+      <!--  SAVED CARS  -->
+      <section id="saved-section" class="view-section">
+        <div class="section-header"><h2>Saved Cars</h2></div>
+        <div id="saved-cars-list" class="card-list"></div>
+      </section>
+
+      <!--  MESSAGES  -->
+      <section id="messages-section" class="view-section">
+        <div class="section-header"><h2>Messages</h2></div>
+
+        <div class="messages-layout">
+          <aside class="messages-sidebar">
+            <h3>Conversations</h3>
+            <ul id="conversation-list" class="conversation-list"></ul>
+          </aside>
+
+          <div class="messages-main">
+            <div id="messages-header" class="messages-header">
+              <h3 id="messages-with">Select a conversation</h3>
+            </div>
+            <div id="messages-thread" class="messages-thread"></div>
+
+            <form id="message-form" class="message-form">
+              <textarea id="message-text" rows="2" placeholder="Type a message..."></textarea>
+              <button type="submit" class="primary-btn">Send</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROFILE  -->
+      <section id="profile-section" class="view-section">
+        <div class="section-header"><h2>Profile</h2></div>
+
+        <div class="profile-layout">
+          <div class="profile-side">
+            <div class="profile-card">
+              <div class="profile-avatar">
+                <img id="profile-image" src="/img/default-profile.png" alt="Profile picture">
+              </div>
+              <div class="profile-info">
+                <h3 id="profile-username-display"></h3>
+                <p id="profile-role-location"></p>
+              </div>
+                <!-- upload new profile picture -->
+              <div class="profile-upload" style="margin-top: 10px;">
+                <input type="file" id="profile-image-input" accept="image/*">
+                <button id="profile-image-upload-btn" class="secondary-btn" type="button">
+                  Upload new picture
+                </button>
+              </div>
+            </div>
+
+            <div class="profile-meta">
+              <p class="follow-btn-row" id="open-followers">
+              <span id="profile-followers-count">0</span> Followers
+            </p>
+              <p class="follow-btn-row" id="open-following">
+              <span id="profile-following-count">0</span> Following</p>
+              <!-- popup showing the follower or following list -->
+              <div id="follow-list-modal" class="hidden follow-modal">
+            <div class="follow-modal-content">
+              <h3 id="follow-modal-title"></h3>
+              <div id="follow-modal-list"></div>
+              <button id="follow-modal-close" class="secondary-btn">Close</button>
+            </div>
+        </div>
+              <p class="follow-btn-row">
+
+              <span id="profile-listings-count">0</span> Listings</p>
+            </div>
+          </div>
+
+          <div class="profile-main">
+            <h3 class="my-listings-title">My Listings</h3>
+            <div id="profile-listings" class="card-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!--  SINGLE LISTING VIEW  -->
+      <section id="listing-section" class="view-section">
+        <button id="back-to-previous" class="secondary-btn back-btn">← Back</button>
+        <!-- The full listing details , likes , comments and etc gets in here -->
+        <div id="listing-container" class="listing-container"></div>
+      </section>
+
+    </main>
+  </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+<script src="js/utils.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/navigation.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/users.js"></script>
+<script src="js/follow.js"></script>
+<script src="js/feed.js"></script>
+<script src="js/listings.js"></script>
+<script src="js/dvla.js"></script>
+<script src="js/messages.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

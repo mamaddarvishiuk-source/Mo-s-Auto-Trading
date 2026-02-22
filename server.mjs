@@ -19,8 +19,11 @@ import path from "path";
 import fs from "fs";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Running on ${PORT}`));
+const PORT = process.env.PORT || 10000;
+
+app.listen(PORT, () => {
+  console.log(`Running on ${PORT}`);
+});
 const M01031166 = "M01031166";
 
 

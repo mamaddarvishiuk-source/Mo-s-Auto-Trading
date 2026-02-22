@@ -19,8 +19,10 @@ import path from "path";
 import fs from "fs";
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Running on ${PORT}`));
 const M01031166 = "M01031166";
+
 
 // ******* DVLA VEHICLE ENQUIRY (Third Party API)  *******
 const DVLA_API_KEY = "V3nrsgd0bI2fOr8I9UPjXOZhUP4oxqZ1Qirjyqrf";

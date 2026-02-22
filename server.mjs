@@ -22,7 +22,7 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
-  console.log(`Running on ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 const M01031166 = "M01031166";
 
@@ -810,8 +810,3 @@ app.get(`/${M01031166}/my-listings`, requireLogin, async (req, res) => {
   res.json({ success: true, listings: docs });
 });
 
-// ******* START SERVER *******
-
-app.listen(PORT, () => {
-  console.log("Server running on http://localhost:" + PORT);
-});

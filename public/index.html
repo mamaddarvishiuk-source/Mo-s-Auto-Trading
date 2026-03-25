@@ -1,29 +1,44 @@
-<!-- 
-* Student Name : MOHAMMAD DARVISHI
-* Student ID : M01031166
-* WEB APPLICATIONS AND DATABASES
-* Coursework2 : MO'S AUTO TRADING
-* MODULE LEADERS: DAVID GAMEZ, ADAM PHILPOT
--->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>MO'S Auto Trading</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Main stylesheet -->
+  <title>Mo's Auto Trading — Find Your Perfect Vehicle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
 <div id="app">
 
-  <!-- HEADER (only visible when user is logged in) -->
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       GUEST NAVIGATION — shown when not logged in
+  ═══════════════════════════════════════════════════════════════════════════ -->
+  <nav id="guest-nav" class="guest-nav hidden">
+    <div class="guest-nav-inner">
+      <div class="logo-area">
+        <img src="/img/logo.png" class="logo-img" alt="Logo">
+        <span class="logo-main">MO'S</span>
+        <span class="logo-sub">Auto Trading</span>
+      </div>
+      <div class="guest-nav-actions">
+        <button id="guest-home-btn"   class="nav-btn" data-goto="home-section">Home</button>
+        <button id="guest-browse-btn" class="nav-btn" data-goto="feed-section">Browse Cars</button>
+        <button id="guest-dvla-btn"   class="nav-btn" data-goto="dvla-check-section">Check Vehicle</button>
+        <button id="guest-signin-btn" class="nav-btn" data-goto="auth-section">Sign In</button>
+        <button id="guest-register-btn" class="primary-btn guest-register-cta" data-goto="auth-section" data-auth="register">Register Free</button>
+      </div>
+    </div>
+  </nav>
 
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       MAIN HEADER — shown when logged in
+  ═══════════════════════════════════════════════════════════════════════════ -->
   <header id="main-header" class="header hidden">
     <div class="header-inner">
-      <div class="logo-area">
+      <div class="logo-area" id="header-home-logo" style="cursor:pointer;">
         <img src="/img/logo.png" class="logo-img" alt="Logo">
         <span class="logo-main">MO'S</span>
         <span class="logo-sub">Auto Trading</span>
@@ -32,355 +47,534 @@
         <button class="nav-btn" data-section="feed-section">Feed</button>
         <button class="nav-btn" data-section="search-section">Search</button>
         <button class="nav-btn" data-section="dvla-check-section">Check Vehicle</button>
-        <button class="nav-btn" data-section="create-section">Create Listing</button>
-        <button class="nav-btn" data-section="saved-section">Saved Cars</button>
+        <button class="nav-btn" data-section="create-section">Sell Your Car</button>
+        <button class="nav-btn" data-section="saved-section">Saved</button>
         <button class="nav-btn" data-section="messages-section">Messages</button>
         <button class="nav-btn" data-section="profile-section">Profile</button>
       </nav>
       <div class="header-right">
         <span id="header-username" class="header-username"></span>
-
-        <!-- Small circular profile picture in header -->
-        <img id="header-profile-image"
-             class="header-profile-avatar"
-             src="/img/default-profile.png"
-             alt="Profile picture">
+        <img id="header-profile-image" class="header-profile-avatar" src="/img/default-profile.png" alt="Profile">
         <button id="logout-btn" class="nav-btn nav-btn-logout">Logout</button>
       </div>
     </div>
   </header>
 
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       FLASH NOTIFICATIONS
+  ═══════════════════════════════════════════════════════════════════════════ -->
+  <div id="flash-container" class="flash-container"></div>
+
   <div class="layout">
     <main class="center-column">
 
-      <!-- FLASH MESSAGES ( temporary flashing only for success or error notifs ) -->
-      <div id="flash-container" class="flash-container"></div>
+      <!-- ═══════════════════════════════════════════════════════════════════
+           HOMEPAGE SECTION (default for guests)
+      ═══════════════════════════════════════════════════════════════════════ -->
+      <section id="home-section" class="view-section active full-width-section">
 
-      <!--  AUTH SECTION LOGIN and REGISTER -->
+        <!-- Hero -->
+        <div class="hero-section">
+          <div class="hero-overlay"></div>
+          <div class="hero-content">
+            <div class="hero-badge">DVLA Verified · AI-Powered · UK's Finest</div>
+            <h1 class="hero-headline">Find Your Perfect<br><span class="hero-headline-accent">Vehicle</span></h1>
+            <p class="hero-sub">Browse quality-checked vehicles from trusted private sellers and dealers across the UK. Every listing DVLA-verifiable.</p>
 
-      <section id="auth-section" class="view-section active">
+            <div class="hero-search-bar">
+              <input type="text" id="hero-search-input" placeholder="Search make, model, or keyword…" autocomplete="off">
+              <button id="hero-search-btn" class="hero-search-submit">Search</button>
+            </div>
+
+            <div class="hero-quick-filters">
+              <button class="quick-filter-btn" data-make="BMW">BMW</button>
+              <button class="quick-filter-btn" data-make="Mercedes">Mercedes</button>
+              <button class="quick-filter-btn" data-make="Audi">Audi</button>
+              <button class="quick-filter-btn" data-make="Ford">Ford</button>
+              <button class="quick-filter-btn" data-make="Toyota">Toyota</button>
+              <button class="quick-filter-btn" data-make="Volkswagen">VW</button>
+            </div>
+
+            <div class="hero-ctas">
+              <button id="hero-browse-btn" class="primary-btn hero-cta-primary">Browse All Cars</button>
+              <button id="hero-sell-btn"   class="secondary-btn hero-cta-secondary">Sell Your Car</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats bar -->
+        <div class="stats-bar">
+          <div class="stat-item">
+            <span id="stat-listings" class="stat-number">—</span>
+            <span class="stat-label">Active Listings</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span id="stat-sellers" class="stat-number">—</span>
+            <span class="stat-label">Verified Sellers</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-number gold-text">DVLA</span>
+            <span class="stat-label">API Integrated</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-number gold-text">AI</span>
+            <span class="stat-label">Price Insights</span>
+          </div>
+        </div>
+
+        <!-- Recently listed vehicles -->
+        <div class="home-listings-section">
+          <div class="home-section-header">
+            <h2 class="home-section-title">Recently Listed</h2>
+            <button id="home-view-all-btn" class="secondary-btn">View All →</button>
+          </div>
+          <div id="home-featured-grid" class="card-grid home-grid">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+        </div>
+
+        <!-- How it works -->
+        <div class="how-it-works">
+          <h2 class="home-section-title centered">How It Works</h2>
+          <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-icon">🔍</div>
+              <div class="step-number">01</div>
+              <h3 class="step-title">Browse & Search</h3>
+              <p class="step-desc">Search thousands of listings by make, model, price, or fuel type. No account required to browse.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-icon">✅</div>
+              <div class="step-number">02</div>
+              <h3 class="step-title">DVLA Verify</h3>
+              <p class="step-desc">Every vehicle can be checked against the DVLA database. View MOT status, tax due date, and full history.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-icon">💬</div>
+              <div class="step-number">03</div>
+              <h3 class="step-title">Connect & Buy</h3>
+              <p class="step-desc">Message sellers directly, save your favourites, and buy with confidence using our AI price insights.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Features highlight -->
+        <div class="features-section">
+          <div class="feature-card">
+            <span class="feature-icon">🤖</span>
+            <h3>AI Price Analysis</h3>
+            <p>Our machine learning model analyses market data to tell you whether a listing is fairly priced, a bargain, or overpriced.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🚗</span>
+            <h3>DVLA Integration</h3>
+            <p>Instantly check any UK vehicle. MOT expiry, tax status, fuel type, and engine details — all pulled live from the DVLA API.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">⭐</span>
+            <h3>Save & Compare</h3>
+            <p>Create a free account to save vehicles, message sellers, follow your favourite dealers, and manage your own listings.</p>
+          </div>
+        </div>
+
+        <!-- CTA banner -->
+        <div class="cta-banner">
+          <div class="cta-banner-content">
+            <h2>Ready to sell your car?</h2>
+            <p>Create a free account and list your vehicle in minutes. Reach thousands of buyers.</p>
+            <button id="cta-register-btn" class="primary-btn cta-btn" data-goto="auth-section" data-auth="register">
+              Create Free Account
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════════════
+           AUTH SECTION
+      ═══════════════════════════════════════════════════════════════════════ -->
+      <section id="auth-section" class="view-section">
         <div class="auth-card">
           <div class="auth-logo">
-            <img src="/img/logo.png" alt="Mo's Auto Trading logo" class="auth-logo-img">
+            <img src="/img/logo.png" alt="Mo's Auto Trading" class="auth-logo-img">
+            <div class="auth-brand">MO'S Auto Trading</div>
           </div>
 
           <div class="auth-toggle">
-            <button id="show-login" class="auth-toggle-btn active">Login</button>
+            <button id="show-login"    class="auth-toggle-btn active">Sign In</button>
             <button id="show-register" class="auth-toggle-btn">Register</button>
           </div>
 
           <!-- Login form -->
           <form id="login-form" class="auth-form">
-            <h2 class="auth-title">Welcome to MO'S Auto Trading</h2>
+            <h2 class="auth-title">Welcome back</h2>
+            <p class="auth-subtitle">Sign in to access your listings, messages, and saved vehicles.</p>
             <div class="form-group">
               <label for="login-username">Username</label>
-              <input type="text" id="login-username" name="username" required>
+              <input type="text" id="login-username" name="username" placeholder="Your username" required autocomplete="username">
             </div>
             <div class="form-group">
               <label for="login-password">Password</label>
-              <input type="password" id="login-password" name="password" required>
+              <input type="password" id="login-password" name="password" placeholder="Your password" required autocomplete="current-password">
             </div>
-            <button type="submit" class="primary-btn full-width">Login</button>
+            <button type="submit" class="primary-btn full-width">Sign In</button>
+            <p class="auth-switch-text">No account? <button type="button" id="login-to-register" class="text-link">Register free →</button></p>
           </form>
 
           <!-- Register form -->
           <form id="register-form" class="auth-form hidden">
             <h2 class="auth-title">Create your account</h2>
+            <p class="auth-subtitle">Join thousands of buyers and sellers on Mo's Auto Trading.</p>
 
             <div class="form-group">
               <label for="register-username">Username</label>
-              <input type="text" id="register-username" required>
+              <input type="text" id="register-username" placeholder="Choose a username" required autocomplete="username">
             </div>
-
             <div class="form-group">
-              <label for="register-email">Email</label>
-              <input type="email" id="register-email" required>
+              <label for="register-email">Email address</label>
+              <input type="email" id="register-email" placeholder="your@email.com" required autocomplete="email">
             </div>
-
             <div class="form-row">
               <div class="form-group">
                 <label for="register-password">Password</label>
-                <input type="password" id="register-password" required>
+                <input type="password" id="register-password" placeholder="Min. 6 characters" required autocomplete="new-password">
               </div>
               <div class="form-group">
                 <label for="register-password-confirm">Confirm password</label>
-                <input type="password" id="register-password-confirm" required>
+                <input type="password" id="register-password-confirm" placeholder="Repeat password" required>
               </div>
             </div>
-
-            <div class="form-group">
-              <label for="register-dob">Date of birth</label>
-              <input type="date" id="register-dob" required>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="register-dob">Date of birth</label>
+                <input type="date" id="register-dob" required>
+              </div>
+              <div class="form-group">
+                <label for="register-location">Location</label>
+                <input type="text" id="register-location" placeholder="e.g. London" required>
+              </div>
             </div>
-
             <div class="form-group">
-              <label for="register-location">Location</label>
-              <input type="text" id="register-location" placeholder="e.g. London" required>
-            </div>
-
-            <div class="form-group">
-              <label for="register-role">Role</label>
+              <label for="register-role">I am a</label>
               <select id="register-role" required>
                 <option value="">Select role</option>
                 <option value="buyer">Buyer</option>
-                <option value="seller">Seller</option>
+                <option value="seller">Private Seller</option>
                 <option value="dealer">Dealer</option>
               </select>
             </div>
-
-            <button type="submit" class="primary-btn full-width">Register</button>
+            <button type="submit" class="primary-btn full-width">Create Account</button>
+            <p class="auth-switch-text">Already registered? <button type="button" id="register-to-login" class="text-link">Sign in →</button></p>
           </form>
+
+          <button id="auth-back-btn" class="text-link auth-back">← Back to browsing</button>
         </div>
       </section>
 
-      <!-- FEED SECTION -->
-
+      <!-- ═══════════════════════════════════════════════════════════════════
+           FEED SECTION
+      ═══════════════════════════════════════════════════════════════════════ -->
       <section id="feed-section" class="view-section">
         <div class="section-header">
-          <h2>Your Feed</h2>
-          <button id="feed-show-all" class="secondary-btn">All Posts</button>
-          <button id="feed-show-following" class="secondary-btn">Following Only</button>
-          <div class="section-controls">
-            
+          <h2>Browse Vehicles</h2>
+          <div class="section-header-actions">
+            <button id="feed-show-all"       class="secondary-btn">All Listings</button>
+            <button id="feed-show-following" class="secondary-btn auth-only-btn">Following</button>
             <div class="form-group inline">
-              <label for="feed-sort">Sort by</label>
               <select id="feed-sort">
-                <option value="newest">Newest</option>
-                <option value="oldest">Oldest</option>
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
                 <option value="pricelow">Price: Low → High</option>
                 <option value="pricehigh">Price: High → Low</option>
               </select>
             </div>
-            <button id="refresh-feed-btn" class="secondary-btn">Refresh</button>
+            <button id="refresh-feed-btn" class="icon-btn" title="Refresh">↻</button>
           </div>
         </div>
 
-        <!-- Quick composer for buyers who wants to post wanted post -->
-        <div class="feed-composer">
+        <!-- Quick composer — hidden for guests via JS -->
+        <div id="feed-composer" class="feed-composer auth-only">
           <div class="feed-composer-top">
-            <div class="feed-avatar-circle"></div>
-            <input id="feed-quick-title" type="text" placeholder="What are you posting today? (title)">
+            <img id="composer-avatar" src="/img/default-profile.png" class="composer-avatar">
+            <input id="feed-quick-title" type="text" placeholder="Post a quick 'wanted' listing…">
           </div>
           <div class="feed-composer-bottom">
-            <input id="feed-quick-price" type="number" placeholder="Price (£)">
-            <input id="feed-quick-location" type="text" placeholder="Location">
-            <button id="feed-quick-post-btn" class="primary-btn">Quick post</button>
+            <input id="feed-quick-price"    type="number" placeholder="Budget (£)">
+            <input id="feed-quick-location" type="text"   placeholder="Location">
+            <button id="feed-quick-post-btn" class="primary-btn">Post</button>
           </div>
         </div>
-
-        <!-- feed greed where all listings cards appear -->
 
         <div id="feed-grid" class="card-grid"></div>
       </section>
 
-      <!--  SEARCH SECTION  -->
+      <!-- ═══════════════════════════════════════════════════════════════════
+           SEARCH SECTION
+      ═══════════════════════════════════════════════════════════════════════ -->
       <section id="search-section" class="view-section">
-        <div class="section-header"><h2>Search</h2></div>
+        <div class="section-header"><h2>Advanced Search</h2></div>
 
         <form id="search-cars-form" class="filter-form">
-          <div class="form-row">
+          <div class="filter-grid">
             <div class="form-group">
               <label for="search-make">Make</label>
               <input type="text" id="search-make" placeholder="e.g. BMW">
             </div>
-           
+            <div class="form-group">
+              <label for="search-model">Model</label>
+              <input type="text" id="search-model" placeholder="e.g. 3 Series">
+            </div>
+            <div class="form-group">
+              <label for="search-year">Year</label>
+              <input type="number" id="search-year" placeholder="e.g. 2020" min="1990" max="2025">
+            </div>
+            <div class="form-group">
+              <label for="search-fuel">Fuel type</label>
+              <select id="search-fuel">
+                <option value="">Any</option>
+                <option value="PETROL">Petrol</option>
+                <option value="DIESEL">Diesel</option>
+                <option value="ELECTRIC">Electric</option>
+                <option value="HYBRID">Hybrid</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="search-min-price">Min price (£)</label>
+              <input type="number" id="search-min-price" placeholder="0">
+            </div>
+            <div class="form-group">
+              <label for="search-max-price">Max price (£)</label>
+              <input type="number" id="search-max-price" placeholder="100000">
+            </div>
           </div>
-          <button type="submit" class="primary-btn">Search</button>
+          <div class="filter-actions">
+            <button type="submit" class="primary-btn">Search Vehicles</button>
+            <button type="reset"  class="secondary-btn">Clear</button>
+          </div>
         </form>
 
-        <div id="search-results" class="card-list"></div>
+        <div id="search-results" class="card-grid" style="margin-top:20px;"></div>
 
-        <hr style="margin: 20px 0; border-color: #444;">
+        <div class="section-divider"></div>
 
         <div class="section-header"><h2>Find Users</h2></div>
-
         <div class="user-search">
           <div class="form-group">
-            <label for="search-user-input">Search users</label>
-            <input type="text" id="search-user-input" placeholder="Search by username">
+            <input type="text" id="search-user-input" placeholder="Search by username…">
           </div>
           <div id="user-search-results" class="card-list"></div>
         </div>
       </section>
 
-      <!--  DVLA CHECK  -->
+      <!-- ═══════════════════════════════════════════════════════════════════
+           DVLA CHECK SECTION
+      ═══════════════════════════════════════════════════════════════════════ -->
       <section id="dvla-check-section" class="view-section">
-        <div class="section-header"><h2>Check Vehicle (DVLA)</h2></div>
+        <div class="section-header">
+          <h2>Vehicle Check</h2>
+          <p class="section-sub">Enter any UK registration number to view DVLA data including MOT status, tax due date, and vehicle history.</p>
+        </div>
 
-        <form id="dvla-check-form" class="filter-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="dvla-check-reg">Registration number</label>
-              <input type="text" id="dvla-check-reg" placeholder="AB24 CDE" required>
+        <form id="dvla-check-form" class="dvla-form">
+          <div class="dvla-input-group">
+            <div class="reg-plate-mock">
+              <input type="text" id="dvla-check-reg" placeholder="AB24 CDE" required autocomplete="off" maxlength="8">
             </div>
+            <button type="submit" class="primary-btn dvla-submit-btn">Check Vehicle</button>
           </div>
-          <button type="submit" class="primary-btn">Check</button>
         </form>
 
         <div id="dvla-check-result" class="dvla-result-card hidden"></div>
       </section>
 
-      <!--  CREATE LISTING  -->
-       
+      <!-- ═══════════════════════════════════════════════════════════════════
+           CREATE LISTING
+      ═══════════════════════════════════════════════════════════════════════ -->
       <section id="create-section" class="view-section">
-        <div class="section-header"><h2>Create Listing</h2></div>
-          <!-- full form -->
+        <div class="section-header">
+          <h2>Create Listing</h2>
+          <p class="section-sub">Use your registration number to auto-fill DVLA details, then add your price and photos.</p>
+        </div>
+
         <form id="create-listing-form" class="create-form">
-            <!-- registration and auto fill -->
-          <div class="form-row">
-            <div class="form-group">
-              <label for="create-registration">Registration number</label>
-              <input type="text" id="create-registration" required>
+          <div class="form-card">
+            <h3 class="form-card-title">Vehicle Lookup</h3>
+            <div class="form-row dvla-row">
+              <div class="form-group">
+                <label for="create-registration">Registration number</label>
+                <input type="text" id="create-registration" placeholder="e.g. AB24 CDE" required>
+              </div>
+              <div class="form-group reg-fetch-group">
+                <label>&nbsp;</label>
+                <button type="button" id="fetch-cardata-btn" class="secondary-btn dvla-fetch-btn">
+                  Auto-fill from DVLA ↗
+                </button>
+              </div>
             </div>
-            <div class="form-group reg-fetch-group">
-              <button type="button" id="fetch-cardata-btn" class="secondary-btn">
-                Auto-fill from DVLA
-              </button>
+            <div id="cardata-summary" class="cardata-summary hidden"></div>
+          </div>
+
+          <div class="form-card">
+            <h3 class="form-card-title">Listing Details</h3>
+            <div class="form-group">
+              <label for="create-title">Listing title</label>
+              <input type="text" id="create-title" placeholder="e.g. 2019 BMW 3 Series 320i — Full Service History" required>
+            </div>
+            <div class="form-group">
+              <label for="create-description">Description</label>
+              <textarea id="create-description" rows="5" placeholder="Describe the vehicle's condition, history, features, and reason for selling…" required></textarea>
             </div>
           </div>
 
-          <div id="cardata-summary" class="cardata-summary hidden"></div>
-
-          <div class="form-group">
-            <label for="create-title">Title</label>
-            <input type="text" id="create-title" required>
-          </div>
-
-          <div class="form-group">
-            <label for="create-description">Description</label>
-            <textarea id="create-description" rows="4" required></textarea>
-          </div>
-            <!-- basic car details -->
-          <div class="form-row">
-            <div class="form-group">
-              <label for="create-make">Make</label>
-              <input type="text" id="create-make" required>
+          <div class="form-card">
+            <h3 class="form-card-title">Vehicle Specifications</h3>
+            <div class="form-row four-col">
+              <div class="form-group">
+                <label for="create-make">Make</label>
+                <input type="text" id="create-make" required>
+              </div>
+              <div class="form-group">
+                <label for="create-model">Model</label>
+                <input type="text" id="create-model" required>
+              </div>
+              <div class="form-group">
+                <label for="create-year">Year</label>
+                <input type="number" id="create-year" required>
+              </div>
+              <div class="form-group">
+                <label for="create-fuel">Fuel type</label>
+                <input type="text" id="create-fuel" required>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="create-model">Model</label>
-              <input type="text" id="create-model" required>
-            </div>
-            <div class="form-group">
-              <label for="create-year">Year</label>
-              <input type="number" id="create-year" required>
-            </div>
-            <div class="form-group">
-              <label for="create-fuel">Fuel type</label>
-              <input type="text" id="create-fuel" required>
-            </div>
-          </div>
-            <!-- extra vehichle details -->
-          <div class="form-row">
-            <div class="form-group">
-              <label for="create-engine">Engine capacity (cc)</label>
-              <input type="number" id="create-engine">
-            </div>
-            <div class="form-group">
-              <label for="create-colour">Colour</label>
-              <input type="text" id="create-colour">
-            </div>
-            <div class="form-group">
-              <label for="create-co2">CO₂ emissions</label>
-              <input type="number" id="create-co2">
-            </div>
-            <div class="form-group">
-              <label for="create-wheelplan">Wheelplan</label>
-              <input type="text" id="create-wheelplan">
-            </div>
-          </div>
-            <!-- Mot and tax -->
-          <div class="form-row">
-            <div class="form-group">
-              <label for="create-mot-status">MOT status</label>
-              <input type="text" id="create-mot-status">
-            </div>
-            <div class="form-group">
-              <label for="create-mot-expiry">MOT expiry date</label>
-              <input type="text" id="create-mot-expiry">
-            </div>
-            <div class="form-group">
-              <label for="create-tax-status">Tax status</label>
-              <input type="text" id="create-tax-status">
-            </div>
-            <div class="form-group">
-              <label for="create-tax-due">Tax due date</label>
-              <input type="text" id="create-tax-due">
-            </div>
-          </div>
-             <!-- Registration history -->
-          <div class="form-row">
-            <div class="form-group">
-              <label for="create-first-reg">Month of first registration</label>
-              <input type="text" id="create-first-reg">
-            </div>
-            <div class="form-group">
-              <label for="create-v5c-date">Date of last V5C issued</label>
-              <input type="text" id="create-v5c-date">
-            </div>
-            <div class="form-group">
-              <label for="create-mileage">Mileage</label>
-              <input type="number" id="create-mileage" required>
-            </div>
-            <div class="form-group">
-              <label for="create-price">Price (£)</label>
-              <input type="number" id="create-price" required>
+            <div class="form-row four-col">
+              <div class="form-group">
+                <label for="create-engine">Engine (cc)</label>
+                <input type="number" id="create-engine">
+              </div>
+              <div class="form-group">
+                <label for="create-colour">Colour</label>
+                <input type="text" id="create-colour">
+              </div>
+              <div class="form-group">
+                <label for="create-co2">CO₂ (g/km)</label>
+                <input type="number" id="create-co2">
+              </div>
+              <div class="form-group">
+                <label for="create-wheelplan">Wheelplan</label>
+                <input type="text" id="create-wheelplan">
+              </div>
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="create-location">Location</label>
-            <input type="text" id="create-location" required>
+          <div class="form-card">
+            <h3 class="form-card-title">MOT &amp; Tax</h3>
+            <div class="form-row four-col">
+              <div class="form-group">
+                <label for="create-mot-status">MOT status</label>
+                <input type="text" id="create-mot-status">
+              </div>
+              <div class="form-group">
+                <label for="create-mot-expiry">MOT expiry</label>
+                <input type="text" id="create-mot-expiry">
+              </div>
+              <div class="form-group">
+                <label for="create-tax-status">Tax status</label>
+                <input type="text" id="create-tax-status">
+              </div>
+              <div class="form-group">
+                <label for="create-tax-due">Tax due</label>
+                <input type="text" id="create-tax-due">
+              </div>
+            </div>
+            <div class="form-row four-col">
+              <div class="form-group">
+                <label for="create-first-reg">First registered</label>
+                <input type="text" id="create-first-reg">
+              </div>
+              <div class="form-group">
+                <label for="create-v5c-date">Last V5C issued</label>
+                <input type="text" id="create-v5c-date">
+              </div>
+              <div class="form-group">
+                <label for="create-mileage">Mileage</label>
+                <input type="number" id="create-mileage" required>
+              </div>
+              <div class="form-group">
+                <label for="create-price">Asking price (£)</label>
+                <input type="number" id="create-price" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="create-location">Location</label>
+              <input type="text" id="create-location" placeholder="e.g. London, Manchester…" required>
+            </div>
           </div>
 
-          <!-- Image uploads for listing 1 to 3 images  -->
-          <div class="form-group">
-            <label>Car images (1–3)</label>
+          <div class="form-card">
+            <h3 class="form-card-title">Photos (up to 3)</h3>
             <div class="image-upload-row">
-              <input type="file" id="car-image-1" accept="image/*">
-              <input type="file" id="car-image-2" accept="image/*">
-              <input type="file" id="car-image-3" accept="image/*">
+              <label class="image-upload-slot">
+                <input type="file" id="car-image-1" accept="image/*" class="hidden-file-input">
+                <span class="upload-slot-label">+ Photo 1</span>
+              </label>
+              <label class="image-upload-slot">
+                <input type="file" id="car-image-2" accept="image/*" class="hidden-file-input">
+                <span class="upload-slot-label">+ Photo 2</span>
+              </label>
+              <label class="image-upload-slot">
+                <input type="file" id="car-image-3" accept="image/*" class="hidden-file-input">
+                <span class="upload-slot-label">+ Photo 3</span>
+              </label>
             </div>
             <div id="car-image-preview" class="image-preview-row"></div>
           </div>
 
-          <button type="submit" class="primary-btn full-width">Publish listing</button>
+          <button type="submit" class="primary-btn full-width publish-btn">Publish Listing</button>
         </form>
       </section>
 
-      <!--  SAVED CARS  -->
+      <!-- ═══════════════════════════════════════════════════════════════════
+           SAVED CARS
+      ═══════════════════════════════════════════════════════════════════════ -->
       <section id="saved-section" class="view-section">
-        <div class="section-header"><h2>Saved Cars</h2></div>
-        <div id="saved-cars-list" class="card-list"></div>
+        <div class="section-header"><h2>Saved Vehicles</h2></div>
+        <div id="saved-cars-list" class="card-grid"></div>
       </section>
 
-      <!--  MESSAGES  -->
+      <!-- ═══════════════════════════════════════════════════════════════════
+           MESSAGES
+      ═══════════════════════════════════════════════════════════════════════ -->
       <section id="messages-section" class="view-section">
         <div class="section-header"><h2>Messages</h2></div>
-
         <div class="messages-layout">
           <aside class="messages-sidebar">
             <h3>Conversations</h3>
             <ul id="conversation-list" class="conversation-list"></ul>
           </aside>
-
           <div class="messages-main">
             <div id="messages-header" class="messages-header">
               <h3 id="messages-with">Select a conversation</h3>
             </div>
             <div id="messages-thread" class="messages-thread"></div>
-
             <form id="message-form" class="message-form">
-              <textarea id="message-text" rows="2" placeholder="Type a message..."></textarea>
+              <textarea id="message-text" rows="2" placeholder="Type a message…"></textarea>
               <button type="submit" class="primary-btn">Send</button>
             </form>
           </div>
         </div>
       </section>
 
-      <!-- PROFILE  -->
+      <!-- ═══════════════════════════════════════════════════════════════════
+           PROFILE
+      ═══════════════════════════════════════════════════════════════════════ -->
       <section id="profile-section" class="view-section">
-        <div class="section-header"><h2>Profile</h2></div>
-
+        <div class="section-header"><h2>My Profile</h2></div>
         <div class="profile-layout">
           <div class="profile-side">
             <div class="profile-card">
@@ -391,35 +585,31 @@
                 <h3 id="profile-username-display"></h3>
                 <p id="profile-role-location"></p>
               </div>
-                <!-- upload new profile picture -->
-              <div class="profile-upload" style="margin-top: 10px;">
+              <div class="profile-upload">
                 <input type="file" id="profile-image-input" accept="image/*">
-                <button id="profile-image-upload-btn" class="secondary-btn" type="button">
-                  Upload new picture
-                </button>
+                <button id="profile-image-upload-btn" class="secondary-btn" type="button">Upload Photo</button>
               </div>
             </div>
-
             <div class="profile-meta">
               <p class="follow-btn-row" id="open-followers">
-              <span id="profile-followers-count">0</span> Followers
-            </p>
+                <span id="profile-followers-count">0</span> Followers
+              </p>
               <p class="follow-btn-row" id="open-following">
-              <span id="profile-following-count">0</span> Following</p>
-              <!-- popup showing the follower or following list -->
-              <div id="follow-list-modal" class="hidden follow-modal">
-            <div class="follow-modal-content">
-              <h3 id="follow-modal-title"></h3>
-              <div id="follow-modal-list"></div>
-              <button id="follow-modal-close" class="secondary-btn">Close</button>
-            </div>
-        </div>
+                <span id="profile-following-count">0</span> Following
+              </p>
               <p class="follow-btn-row">
-
-              <span id="profile-listings-count">0</span> Listings</p>
+                <span id="profile-listings-count">0</span> Listings
+              </p>
+            </div>
+            <!-- Follow list modal -->
+            <div id="follow-list-modal" class="hidden follow-modal">
+              <div class="follow-modal-content">
+                <h3 id="follow-modal-title"></h3>
+                <div id="follow-modal-list"></div>
+                <button id="follow-modal-close" class="secondary-btn">Close</button>
+              </div>
             </div>
           </div>
-
           <div class="profile-main">
             <h3 class="my-listings-title">My Listings</h3>
             <div id="profile-listings" class="card-list"></div>
@@ -427,19 +617,57 @@
         </div>
       </section>
 
-      <!--  SINGLE LISTING VIEW  -->
+      <!-- ═══════════════════════════════════════════════════════════════════
+           SINGLE LISTING VIEW
+      ═══════════════════════════════════════════════════════════════════════ -->
       <section id="listing-section" class="view-section">
         <button id="back-to-previous" class="secondary-btn back-btn">← Back</button>
-        <!-- The full listing details , likes , comments and etc gets in here -->
         <div id="listing-container" class="listing-container"></div>
       </section>
 
     </main>
   </div>
 
-</div>
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="/img/logo.png" class="logo-img" alt="Logo">
+        <span class="logo-main">MO'S</span>
+        <span class="logo-sub">Auto Trading</span>
+        <p class="footer-tagline">The smarter way to buy and sell vehicles in the UK.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Browse</h4>
+          <button class="footer-link-btn" data-goto="feed-section">All Listings</button>
+          <button class="footer-link-btn" data-goto="dvla-check-section">Vehicle Check</button>
+          <button class="footer-link-btn" data-goto="search-section">Search</button>
+        </div>
+        <div class="footer-col">
+          <h4>Account</h4>
+          <button class="footer-link-btn" data-goto="auth-section">Sign In</button>
+          <button class="footer-link-btn" data-goto="auth-section" data-auth="register">Register</button>
+          <button class="footer-link-btn" data-goto="create-section">Sell Your Car</button>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <span class="footer-text">DVLA API Integrated</span>
+          <span class="footer-text">AI Price Insights</span>
+          <span class="footer-text">Secure Messaging</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Mo's Auto Trading. Built with Node.js, Express, MongoDB &amp; Python AI.</p>
+    </div>
+  </footer>
 
-<!-- JAVASCRIPT -->
+</div><!-- #app -->
+
+<!-- ── JavaScript modules (load order matters) ── -->
 <script src="js/utils.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/navigation.js"></script>
@@ -450,6 +678,7 @@
 <script src="js/listings.js"></script>
 <script src="js/dvla.js"></script>
 <script src="js/messages.js"></script>
+<script src="js/homepage.js"></script>
 <script src="js/app.js"></script>
 
 </body>

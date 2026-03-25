@@ -1,83 +1,100 @@
 /**
- * showFlash
- * Displays a short message at the top of the page.
- * Used for success/error notifications so the user actually knows what just happened.
+ * ui.js — Core UI state management
+ * Controls section visibility, notifications, and auth mode switching.
  */
+
+// ── FLASH NOTIFICATIONS ────────────────────────────────────────────────────
 
 function showFlash(message, type = "success") {
   const container = document.getElementById("flash-container");
   if (!container) return;
 
   const div = document.createElement("div");
-  div.className = `flash-message ${
-    type === "error" ? "flash-error" : "flash-success"
-  }`;
+  div.className = `flash-message ${type === "error" ? "flash-error" : "flash-success"}`;
   div.textContent = message;
   container.appendChild(div);
 
   setTimeout(() => div.remove(), 4000);
 }
 
-/**
- * showSection
- * Hides every section and makes only the requested one visible.
- * Used whenever the user switches pages inside the app.
- */
+// ── SECTION VISIBILITY ─────────────────────────────────────────────────────
 
 function showSection(sectionId) {
   document.querySelectorAll(".view-section").forEach(sec => {
     sec.classList.remove("active");
   });
-
   const sec = document.getElementById(sectionId);
-  if (sec) {
-    sec.classList.add("active");
-  }
+  if (sec) sec.classList.add("active");
 }
 
-/**
- * setActiveNav
- * Highlights the correct button in the top navigation bar.
- * Makes it clear which page the user is currently on.
- */
-
 function setActiveNav(sectionId) {
-  document.querySelectorAll(".nav-btn").forEach(btn => {
-    if (btn.dataset.section === sectionId) btn.classList.add("active");
-    else btn.classList.remove("active");
+  document.querySelectorAll(".nav-btn[data-section]").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.section === sectionId);
   });
 }
 
-/**
- * setAuthMode
- * Switches between logged-out mode and logged-in mode.
- * Logged out: - Only login/register section is visible.
- * Logged in: - Header appears
- *   - User is taken straight to the feed.
- */
+// ── AUTH MODE SWITCH ───────────────────────────────────────────────────────
 
+/**
+ * Switch the UI between guest mode and logged-in mode.
+ *
+ * Guest (loggedIn = false):
+ *   - Shows the guest nav bar
+ *   - Hides the main header
+ *   - Shows the homepage section
+ *   - Hides auth-only UI elements
+ *
+ * Logged in (loggedIn = true):
+ *   - Hides the guest nav
+ *   - Shows the main header with username
+ *   - Shows the feed section
+ *   - Shows auth-only UI elements
+ */
 function setAuthMode(loggedIn, username = "") {
-  const header = document.getElementById("main-header");
-  const authSection = document.getElementById("auth-section");
+  const header     = document.getElementById("main-header");
+  const guestNav   = document.getElementById("guest-nav");
   const headerUser = document.getElementById("header-username");
-  const headerImg = document.getElementById("header-profile-image");
+  const headerImg  = document.getElementById("header-profile-image");
 
   if (loggedIn) {
-    //show header + username 
-    if (header) header.classList.remove("hidden");
+    // Show full app
+    header?.classList.remove("hidden");
+    guestNav?.classList.add("hidden");
     if (headerUser) headerUser.textContent = username;
 
-    // hide login and register , feed comes up
-    if (authSection) authSection.classList.remove("active");
+    // Show auth-only elements (quick-post composer, following toggle, etc.)
+    document.querySelectorAll(".auth-only").forEach(el => el.classList.remove("hidden"));
+    document.querySelectorAll(".auth-only-btn").forEach(el => el.classList.remove("hidden"));
+
     showSection("feed-section");
     setActiveNav("feed-section");
   } else {
-    //hide header and reset name + avatar
-    if (header) header.classList.add("hidden");
+    // Guest mode
+    header?.classList.add("hidden");
+    guestNav?.classList.remove("hidden");
     if (headerUser) headerUser.textContent = "";
-    if (headerImg) headerImg.src = "/img/default-profile.png";
+    if (headerImg)  headerImg.src = "/img/default-profile.png";
 
-    //show login and register section 
-    showSection("auth-section");
+    // Hide auth-only elements
+    document.querySelectorAll(".auth-only").forEach(el => el.classList.add("hidden"));
+    document.querySelectorAll(".auth-only-btn").forEach(el => el.classList.add("hidden"));
+
+    showSection("home-section");
   }
+}
+
+// ── GUEST LOGIN PROMPT ─────────────────────────────────────────────────────
+
+/**
+ * Returns an HTML block prompting guests to sign in.
+ * Used in place of like/save/comment buttons for unauthenticated users.
+ */
+function guestPromptHTML(actionText = "perform this action") {
+  return `
+    <div class="guest-gate-prompt">
+      <p>Please sign in or create a free account to ${actionText}.</p>
+      <button class="primary-btn" onclick="showSection('auth-section')">Sign In</button>
+      <button class="secondary-btn" onclick="showSection('auth-section');document.getElementById('show-register').click()">Register Free</button>
+    </div>
+  `;
 }

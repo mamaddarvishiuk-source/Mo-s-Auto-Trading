@@ -1,28 +1,35 @@
-
-// Handles loading the feed, sorting stuff, and showing everything in the grid.
-// Basically the part of the site that tries to keep my homepage alive.
-
 /**
- * loadFeed
- * Gets the feed from the server.
- * If you're following people, it tries to show their posts first.
- * If you're not (or they posted nothing), it just shows every listing instead.
+ * feed.js — Feed loading, sorting, quick post, and saved cars.
+ * Works for both guests (all listings, no composer) and logged-in users.
  */
 
-let feedMode = "all";  // "all" or "only following"
-async function loadFeed() {
+let feedMode = "all"; // "all" | "following"
+
+// ── LOAD FEED ──────────────────────────────────────────────────────────────
+
+async function loadFeed(makeFilter) {
+  const grid = document.getElementById("feed-grid");
+  if (!grid) return;
+
+  grid.innerHTML = `<div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>`;
+
   try {
     let listings = [];
 
     if (feedMode === "following") {
-      const feedData = await jsonFetch(`/${M01031166}/feed`);
-      listings = feedData.results || [];
+      try {
+        const feedData = await jsonFetch(`/${M01031166}/feed`);
+        listings = feedData.results || [];
+      } catch {
+        // Not logged in — fall through to all
+        feedMode = "all";
+      }
     }
 
-    // If user picked "all" or following feed comes back empty, just load everything
-
     if (feedMode === "all" || !listings.length) {
-      const all = await jsonFetch(`/${M01031166}/contents`);
+      const params = new URLSearchParams();
+      if (makeFilter) params.set("make", makeFilter);
+      const all = await jsonFetch(`/${M01031166}/contents?${params}`);
       listings = all.results || [];
     }
 
@@ -30,23 +37,24 @@ async function loadFeed() {
     renderFeedGrid(listings);
 
   } catch (err) {
-    showFlash(err.message || "Could not load feed", "error");
+    if (grid) grid.innerHTML = `<p style="color:#888;padding:20px;grid-column:1/-1;">Could not load listings. Please try again.</p>`;
   }
 }
 
-/**
- * renderFeedGrid
- * Turns a bunch of listings into clickable cards and throws them into the feed grid.
- */
+// ── RENDER GRID ────────────────────────────────────────────────────────────
 
 function renderFeedGrid(listings) {
   const grid = document.getElementById("feed-grid");
   if (!grid) return;
+
   grid.innerHTML = "";
 
   if (!listings.length) {
-    grid.innerHTML =
-      "<p>No listings to show. Follow some sellers or create your own listing.</p>";
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:60px 20px;">
+        <p style="color:#888;font-size:1rem;margin-bottom:16px;">No vehicles found matching your search.</p>
+        <button class="secondary-btn" onclick="document.getElementById('search-make').value='';loadFeed()">Clear filters</button>
+      </div>`;
     return;
   }
 
@@ -54,48 +62,38 @@ function renderFeedGrid(listings) {
     const div = document.createElement("div");
     div.className = "grid-card";
 
-    const title =
-      listing.title ||
-      `${listing.make || ""} ${listing.model || ""}`.trim() ||
-      "Listing";
-
-    const price = listing.price ? `£${listing.price}` : "Price on enquiry";
-    const mileage = listing.mileage ? `${listing.mileage} miles` : "";
-    const year = listing.year || "";
+    const title    = listing.title || `${listing.make || ""} ${listing.model || ""}`.trim() || "Listing";
+    const price    = listing.price ? `£${Number(listing.price).toLocaleString()}` : "POA";
+    const year     = listing.year     ? `${listing.year}` : "";
+    const mileage  = listing.mileage  ? `${Number(listing.mileage).toLocaleString()} mi` : "";
+    const fuel     = listing.fuelType ? listing.fuelType : "";
     const location = listing.location || "";
+    const metaParts = [year, mileage, fuel].filter(Boolean);
 
-    let imageUrl;
+    const imageUrl = listing.fromQuickFeed
+      ? "/img/car-default.png"
+      : (listing.imagePaths?.[0] || "/img/car-default.png");
 
-if (listing.fromQuickFeed) {
-  // If it was created from the quick-post box, use the default pic 
-  // Basically posting through the quick post box on the feed page is 
-  // Only for the buyers who wants to tell other users what kind of car they want
-  // And when they publish the post a picture of a "Car wanted" comes up as a default.
-
-  imageUrl = "/img/car-default.png";
-} else {
-  imageUrl =
-    listing.imagePaths && listing.imagePaths.length > 0
-      ? listing.imagePaths[0]
-      : "/img/car-default.png";
-}
+    const wantedBadge = listing.fromQuickFeed
+      ? `<span class="grid-card-badge">Wanted</span>`
+      : "";
 
     div.innerHTML = `
-      <img src="${imageUrl}" class="grid-card-img" alt="${title}" />
+      <img src="${imageUrl}" class="grid-card-img" alt="${_escFeed(title)}" loading="lazy">
       <div class="grid-card-content">
         <div class="grid-card-price">${price}</div>
-        <div class="grid-card-title">${title}</div>
+        <div class="grid-card-title">${_escFeed(title)}</div>
         <div class="grid-card-meta">
-          ${year ? year : ""} · ${mileage}<br>${location}
+          ${metaParts.join(" · ")}
+          ${location ? `<span>📍 ${_escFeed(location)}</span>` : ""}
         </div>
+        ${wantedBadge}
       </div>
     `;
 
     div.addEventListener("click", () => {
       if (typeof loadListingDetails === "function") {
         loadListingDetails(listing._id);
-      } else {
-        showFlash("Listing detail view not available", "error");
       }
     });
 
@@ -103,121 +101,73 @@ if (listing.fromQuickFeed) {
   });
 }
 
-/**
- * applyFeedFilters
- * Applies whatever sorting option the user picked (newest, oldest, price, etc.)
- * More filtering could go here if needed later.
- */
+// ── SORT / FILTER ──────────────────────────────────────────────────────────
 
 function applyFeedFilters(list) {
-  
-  const sortSelectEl = document.getElementById("feed-sort");
+  const sortEl = document.getElementById("feed-sort");
+  const sort   = sortEl ? sortEl.value : "newest";
+  const results = [...list];
 
- 
-  const sortOption = sortSelectEl ? sortSelectEl.value : "newest";
-
-  let results = [...list];
-
-
-
-  switch (sortOption) {
-    case "newest":
-      results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      break;
-    case "oldest":
-      results.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-      break;
-    case "pricelow":
-      results.sort((a, b) => (a.price || 0) - (b.price || 0));
-      break;
-    case "pricehigh":
-      results.sort((a, b) => (b.price || 0) - (a.price || 0));
-      break;
+  switch (sort) {
+    case "newest":   results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); break;
+    case "oldest":   results.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); break;
+    case "pricelow": results.sort((a, b) => (a.price || 0) - (b.price || 0)); break;
+    case "pricehigh":results.sort((a, b) => (b.price || 0) - (a.price || 0)); break;
   }
-
   return results;
 }
 
-/**
- * initFeedControls
- * Hooks up the sorting dropdown and the refresh button.
- * Pretty much the “please reload this mess” part.
- */
-
-function initFeedControls() {
-  const refreshBtn = document.getElementById("refresh-feed-btn");
-  
-  const sortSelect = document.getElementById("feed-sort");
-
-  if (refreshBtn) refreshBtn.addEventListener("click", loadFeed);
-  
-  if (sortSelect) sortSelect.addEventListener("change", loadFeed);
-}
-
-/**
- * initFeedComposer
- * Connects the quick-post bar at the top of the feed.
- * Lets you post simple wanted listings without going through the full form.
- */
+// ── QUICK POST COMPOSER ────────────────────────────────────────────────────
 
 function initFeedComposer() {
   const btn = document.getElementById("feed-quick-post-btn");
   if (!btn) return;
 
   btn.addEventListener("click", async () => {
-    const title = getValue("feed-quick-title");
-    const price = getValue("feed-quick-price");
+    const title    = getValue("feed-quick-title");
+    const price    = getValue("feed-quick-price");
     const location = getValue("feed-quick-location");
 
-    if (!title) {
-      showFlash("Please enter a title", "error");
-      return;
-    }
-
-    const body = {
-      title,
-      price: price ? Number(price) : null,
-      location,
-      fromQuickFeed: true
-    };
+    if (!title) { showFlash("Please enter a title.", "error"); return; }
 
     try {
       const data = await jsonFetch(`/${M01031166}/contents`, {
         method: "POST",
-        body: JSON.stringify(body)
+        body: JSON.stringify({ title, price: price ? Number(price) : null, location, fromQuickFeed: true })
       });
-
       if (!data.success) throw data;
-      showFlash("Quick post published!");
 
+      showFlash("Post published!");
       setValue("feed-quick-title", "");
       setValue("feed-quick-price", "");
       setValue("feed-quick-location", "");
-
       await loadFeed();
     } catch (err) {
-      showFlash(err.message || "Could not publish post", "error");
+      showFlash(err.message || "Could not publish post.", "error");
     }
   });
 }
 
-/**
- * loadSavedCars
- * Loads all your favourited cars and shows them.
- * Basically a smaller feed but only for things you saved.
- */
+// ── SAVED CARS ─────────────────────────────────────────────────────────────
 
 async function loadSavedCars() {
+  const container = document.getElementById("saved-cars-list");
+  if (!container) return;
+
+  container.innerHTML = `<div class="skeleton-card"></div><div class="skeleton-card"></div>`;
+
   try {
     const data = await jsonFetch(`/${M01031166}/favourites`);
     const listings = data.results || [];
 
-    const container = document.getElementById("saved-cars-list");
-    if (!container) return;
-
     container.innerHTML = "";
+
     if (!listings.length) {
-      container.innerHTML = "<p>No saved cars yet.</p>";
+      container.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:60px 20px;">
+          <p style="color:#888;margin-bottom:16px;">No saved vehicles yet.</p>
+          <button class="primary-btn" onclick="showSection('feed-section');setActiveNav('feed-section');loadFeed()">Browse Vehicles</button>
+        </div>`;
       return;
     }
 
@@ -225,69 +175,74 @@ async function loadSavedCars() {
       const div = document.createElement("div");
       div.className = "grid-card";
 
-      const title =
-        listing.title ||
-        `${listing.make || ""} ${listing.model || ""}`.trim() ||
-        "Listing";
-
-      const price = listing.price ? `£${listing.price}` : "Price on enquiry";
-      const location = listing.location || "";
-      const imageUrl =
-        listing.imagePaths && listing.imagePaths.length
-          ? listing.imagePaths[0]
-          : "/img/no-image.png";
+      const title    = listing.title || `${listing.make || ""} ${listing.model || ""}`.trim() || "Listing";
+      const price    = listing.price ? `£${Number(listing.price).toLocaleString()}` : "POA";
+      const imageUrl = listing.imagePaths?.[0] || "/img/no-image.png";
 
       div.innerHTML = `
-        <img src="${imageUrl}" class="grid-card-img" alt="${title}" />
+        <img src="${imageUrl}" class="grid-card-img" alt="${_escFeed(title)}" loading="lazy">
         <div class="grid-card-content">
           <div class="grid-card-price">${price}</div>
-          <div class="grid-card-title">${title}</div>
-          <div class="grid-card-meta">${location}</div>
+          <div class="grid-card-title">${_escFeed(title)}</div>
+          <div class="grid-card-meta">${listing.location ? `📍 ${_escFeed(listing.location)}` : ""}</div>
         </div>
       `;
 
       div.addEventListener("click", () => {
-        if (typeof loadListingDetails === "function") {
-          loadListingDetails(listing._id);
-        }
+        if (typeof loadListingDetails === "function") loadListingDetails(listing._id);
       });
-
       container.appendChild(div);
     });
+
   } catch (err) {
-    showFlash(err.message || "Could not load saved cars", "error");
+    container.innerHTML = `<p style="color:#888;padding:20px;grid-column:1/-1;">Could not load saved vehicles.</p>`;
   }
 }
 
-/**
- * initFeed
- * Sets up everything the feed needs:
- * - sorting
- * - refresh button
- * - quick-post composer
- * - toggling between “all posts” and “following users contents”
- */
+// ── INIT ───────────────────────────────────────────────────────────────────
 
 function initFeed() {
-  initFeedControls();
+  // Sort dropdown
+  document.getElementById("feed-sort")?.addEventListener("change", () => loadFeed());
+
+  // Refresh button
+  document.getElementById("refresh-feed-btn")?.addEventListener("click", () => loadFeed());
+
+  // All / Following toggles
+  document.getElementById("feed-show-all")?.addEventListener("click", () => {
+    feedMode = "all";
+    loadFeed();
+  });
+
+  document.getElementById("feed-show-following")?.addEventListener("click", () => {
+    feedMode = "following";
+    loadFeed();
+  });
+
+  // Quick post composer
   initFeedComposer();
 
-  const showAllBtn = document.getElementById("feed-show-all");
-  const showFollowingBtn = document.getElementById("feed-show-following");
+  // Sync composer avatar with profile pic when available
+  _syncComposerAvatar();
+}
 
-  if (showAllBtn) {
-    showAllBtn.addEventListener("click", () => {
-      feedMode = "all";
-      loadFeed();
-      showFlash("Showing all posts");
+function _syncComposerAvatar() {
+  const composerAvatar = document.getElementById("composer-avatar");
+  const headerAvatar   = document.getElementById("header-profile-image");
+  if (composerAvatar && headerAvatar) {
+    const observer = new MutationObserver(() => {
+      composerAvatar.src = headerAvatar.src;
     });
+    observer.observe(headerAvatar, { attributes: true, attributeFilter: ["src"] });
   }
+}
 
-  if (showFollowingBtn) {
-    showFollowingBtn.addEventListener("click", () => {
-      feedMode = "following";
-      loadFeed();
-      showFlash("Showing posts from people you follow");
-    });
-  }
+// ── HELPERS ────────────────────────────────────────────────────────────────
+
+function _escFeed(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }

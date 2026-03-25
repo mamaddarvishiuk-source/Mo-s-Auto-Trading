@@ -4,11 +4,29 @@
  */
 
 function initNavigation() {
+  const guestNav   = document.getElementById("guest-nav");
+  const mainHeader = document.getElementById("main-header");
+
+  // ── HAMBURGER TOGGLES ────────────────────────────────────────────────────
+  document.getElementById("guest-menu-toggle")?.addEventListener("click", () => {
+    guestNav?.classList.toggle("menu-open");
+  });
+
+  document.getElementById("main-menu-toggle")?.addEventListener("click", () => {
+    mainHeader?.classList.toggle("menu-open");
+  });
+
+  function closeMobileMenus() {
+    guestNav?.classList.remove("menu-open");
+    mainHeader?.classList.remove("menu-open");
+  }
+
   // ── MAIN NAV (logged-in header) ──────────────────────────────────────────
   document.querySelectorAll(".nav-btn[data-section]").forEach(btn => {
     btn.addEventListener("click", () => {
       const target = btn.dataset.section;
       if (!target) return;
+      closeMobileMenus();
       showSection(target);
       setActiveNav(target);
       _loadSectionData(target);
@@ -22,6 +40,7 @@ function initNavigation() {
       const authMode = btn.dataset.auth; // "register" to open register tab
       if (!target) return;
 
+      closeMobileMenus();
       showSection(target);
 
       if (authMode === "register") {

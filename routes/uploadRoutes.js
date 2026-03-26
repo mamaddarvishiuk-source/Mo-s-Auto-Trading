@@ -7,8 +7,18 @@ import { requireLogin } from "../middleware/auth.js";
 const router = Router();
 const ID = "M01031166";
 
-const profileUpload = multer({ dest: "uploads/profile/" });
-const carUpload = multer({ dest: "uploads/cars/" });
+const imageFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image/")) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only image files are allowed"), false);
+  }
+};
+
+const uploadLimits = { fileSize: 5 * 1024 * 1024 }; // 5 MB
+
+const profileUpload = multer({ dest: "uploads/profile/", fileFilter: imageFilter, limits: uploadLimits });
+const carUpload     = multer({ dest: "uploads/cars/",    fileFilter: imageFilter, limits: uploadLimits });
 
 // ── PROFILE PICTURE UPLOAD ────────────────────────────────────────────────────
 router.post(

@@ -10,12 +10,17 @@ const ID = "M01031166";
 // ── CREATE LISTING ────────────────────────────────────────────────────────────
 router.post(`/${ID}/contents`, requireLogin, async (req, res) => {
   const data = req.body;
+
+  if (!data.make || !data.model || !data.price) {
+    return res.status(400).json({ success: false, message: "make, model and price are required" });
+  }
+
   const doc = {
     ...data,
     ownerUsername: req.session.username,
     createdAt: new Date(),
-    likes: data.likes || [],
-    comments: data.comments || []
+    likes: [],
+    comments: []
   };
 
   if (doc.year) doc.year = Number(doc.year);
@@ -30,13 +35,15 @@ router.post(`/${ID}/contents`, requireLogin, async (req, res) => {
 
 // ── SEARCH LISTINGS (public) ──────────────────────────────────────────────────
 router.get(`/${ID}/contents`, async (req, res) => {
-  const { make, model, minPrice, maxPrice, sort, fuelType, year, limit } = req.query;
+  const { make, model, minPrice, maxPrice, sort, fuelType, year, limit, page } = req.query;
+
+  const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
   const query = {};
-  if (make) query.make = { $regex: make, $options: "i" };
-  if (model) query.model = { $regex: model, $options: "i" };
-  if (fuelType) query.fuelType = { $regex: fuelType, $options: "i" };
-  if (year) query.year = Number(year);
+  if (make)     query.make     = { $regex: escape(make),     $options: "i" };
+  if (model)    query.model    = { $regex: escape(model),    $options: "i" };
+  if (fuelType) query.fuelType = { $regex: escape(fuelType), $options: "i" };
+  if (year)     query.year     = Number(year);
 
   if (minPrice || maxPrice) {
     query.price = {};
@@ -46,14 +53,14 @@ router.get(`/${ID}/contents`, async (req, res) => {
 
   const sortQuery = {};
   if (sort === "newest" || !sort) sortQuery.createdAt = -1;
-  else if (sort === "oldest") sortQuery.createdAt = 1;
-  else if (sort === "pricelow") sortQuery.price = 1;
-  else if (sort === "pricehigh") sortQuery.price = -1;
+  else if (sort === "oldest")     sortQuery.createdAt = 1;
+  else if (sort === "pricelow")   sortQuery.price = 1;
+  else if (sort === "pricehigh")  sortQuery.price = -1;
 
-  const cursor = contents.find(query).sort(sortQuery);
-  if (limit) cursor.limit(Number(limit));
+  const pageSize = Math.min(Number(limit) || 20, 100);
+  const skip     = (Math.max(Number(page) || 1, 1) - 1) * pageSize;
 
-  const result = await cursor.toArray();
+  const result = await contents.find(query).sort(sortQuery).skip(skip).limit(pageSize).toArray();
   res.json({ success: true, results: result });
 });
 
@@ -115,6 +122,7 @@ router.post(`/${ID}/listings/:id/comments`, requireLogin, async (req, res) => {
 
   const { text } = req.body;
   if (!text?.trim()) return res.status(400).json({ success: false, message: "Comment text is required" });
+  if (text.trim().length > 500) return res.status(400).json({ success: false, message: "Comment must be 500 characters or fewer" });
 
   const listing = await contents.findOne({ _id: id });
   if (!listing) return res.status(404).json({ success: false, message: "Listing not found" });

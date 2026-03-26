@@ -270,6 +270,9 @@ a { color: var(--gold); text-decoration: none; }
   background:
     linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(10,10,10,0.7) 50%, rgba(0,0,0,0.92) 100%),
     url("/img/diamond.png") center / cover no-repeat;
+  /* full-bleed: escape center-column's max-width on wide screens */
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
 }
 
 .hero-overlay {
@@ -283,8 +286,11 @@ a { color: var(--gold); text-decoration: none; }
   position: relative;
   z-index: 2;
   text-align: center;
+  width: 100%;
   max-width: 720px;
   padding: 60px 28px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .hero-badge {
@@ -299,6 +305,8 @@ a { color: var(--gold); text-decoration: none; }
   padding: 6px 16px;
   border-radius: 20px;
   margin-bottom: 24px;
+  max-width: 100%;
+  white-space: normal;
 }
 
 .hero-headline {
@@ -325,12 +333,14 @@ a { color: var(--gold); text-decoration: none; }
   max-width: 560px;
   margin-left: auto;
   margin-right: auto;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .hero-search-bar {
   display: flex;
   gap: 0;
-  max-width: 560px;
+  max-width: min(560px, 100%);
   margin: 0 auto 24px;
   background: var(--black-card);
   border: 1px solid rgba(212,175,55,0.4);
@@ -1850,6 +1860,13 @@ a { color: var(--gold); text-decoration: none; }
   text-align: center;
 }
 
+.footer-version {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #333;
+  letter-spacing: 0.5px;
+}
+
 /* ── HAMBURGER BUTTON ─────────────────────────────────────────────────────── */
 .mobile-menu-btn {
   display: none;
@@ -1946,7 +1963,8 @@ a { color: var(--gold); text-decoration: none; }
   .hero-headline { font-size: 2rem; }
   .stats-bar { flex-direction: column; gap: 20px; padding: 28px; }
   .stat-divider { display: none; }
-  .hero-content { padding: 40px 20px; }
+  .hero-content { padding: 40px 16px; width: 100%; }
+  .hero-badge { font-size: 10px; letter-spacing: 1px; padding: 5px 12px; }
   .home-listings-section { padding: 40px 20px; }
   .how-it-works { padding: 48px 20px; }
   .profile-layout { flex-direction: column; }

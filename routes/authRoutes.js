@@ -22,14 +22,7 @@ router.post(`/${ID}/login`, async (req, res) => {
   const user = await users.findOne({ username });
   if (!user) return res.json({ success: false, message: "Invalid username or password" });
 
-  // Compare against bcrypt hash; fall back to plain-text for legacy accounts
-  let valid = false;
-  if (user.password?.startsWith("$2")) {
-    valid = await bcrypt.compare(password, user.password);
-  } else {
-    valid = user.password === password;
-  }
-
+  const valid = await bcrypt.compare(password, user.password);
   if (!valid) return res.json({ success: false, message: "Invalid username or password" });
 
   req.session.username = username;
@@ -47,6 +40,9 @@ router.post(`/${ID}/users`, async (req, res) => {
 
   if (!username || !email || !password) {
     return res.status(400).json({ success: false, message: "Username, email and password are required" });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ success: false, message: "Password must be at least 6 characters" });
   }
 
   const exists = await users.findOne({ username });
@@ -71,10 +67,12 @@ router.post(`/${ID}/users`, async (req, res) => {
 
 // ── SEARCH USERS ──────────────────────────────────────────────────────────────
 router.get(`/${ID}/users`, async (req, res) => {
-  const q = req.query.q || "";
+  const q = (req.query.q || "").trim().slice(0, 50);
+  const safe = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const result = await users
-    .find({ username: { $regex: q, $options: "i" } })
+    .find({ username: { $regex: safe, $options: "i" } })
     .project({ password: 0 })
+    .limit(20)
     .toArray();
   res.json({ success: true, results: result });
 });

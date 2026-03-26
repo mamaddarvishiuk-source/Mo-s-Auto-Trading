@@ -7,9 +7,13 @@ const ID = "M01031166";
 
 // ── SEND MESSAGE ──────────────────────────────────────────────────────────────
 router.post(`/${ID}/messages`, requireLogin, async (req, res) => {
-  const { to, text } = req.body;
+  const { to } = req.body;
+  const text = req.body.text?.trim();
   if (!to || !text) {
     return res.status(400).json({ success: false, message: "to and text are required" });
+  }
+  if (text.length > 1000) {
+    return res.status(400).json({ success: false, message: "Message must be 1000 characters or fewer" });
   }
   if (to === req.session.username) {
     return res.json({ success: false, message: "You cannot message yourself" });

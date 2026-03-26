@@ -9,6 +9,7 @@ import "dotenv/config";
 import express from "express";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import rateLimit from "express-rate-limit";
 import path from "path";
 import fs from "fs";
 
@@ -27,6 +28,23 @@ const PORT = process.env.PORT || 10000;
 // Ensure upload directories exist
 ["uploads", "uploads/profile", "uploads/cars"].forEach(dir => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+});
+
+// ── RATE LIMITERS ─────────────────────────────────────────────────────────────
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,  // 15 minutes
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: "Too many attempts — please try again later" }
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,        // 1 minute
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: "Too many requests — please slow down" }
 });
 
 // ── MIDDLEWARE ────────────────────────────────────────────────────────────────
@@ -56,12 +74,12 @@ app.use("/", express.static("public"));
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // ── ROUTE MODULES ─────────────────────────────────────────────────────────────
-app.use(authRoutes);
+app.use(authLimiter, authRoutes);
 app.use(listingRoutes);
-app.use(messageRoutes);
-app.use(vehicleRoutes);
-app.use(uploadRoutes);
-app.use(aiRoutes);
+app.use(apiLimiter, messageRoutes);
+app.use(apiLimiter, vehicleRoutes);
+app.use(apiLimiter, uploadRoutes);
+app.use(apiLimiter, aiRoutes);
 
 // ── GLOBAL ERROR HANDLER ──────────────────────────────────────────────────────
 app.use((err, req, res, _next) => {
